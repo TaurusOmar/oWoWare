@@ -112,7 +112,7 @@ function encrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
         return;
     }
 
-    // Create index file in the main directory
+    
     create_index_file($target_dir, $error_files);
 
     $iterator = new RecursiveIteratorIterator(
@@ -171,7 +171,7 @@ function decrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
         return;
     }
 
-    // Create index file in the main directory
+    
     create_index_file($target_dir, $error_files);
 
     $iterator = new RecursiveIteratorIterator(
