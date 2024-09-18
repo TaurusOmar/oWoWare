@@ -2,7 +2,7 @@
 session_start();
 
 define('USERNAME', 'admin');
-define('PASSWORD_HASH', '$2a$15$xEbegd2Cf26u2/2dw4LLXu0uJbqifWGFWXXh0gBkTDoImJOCJ5Ogu');
+define('PASSWORD_HASH', '$2a$12$KQ8VZAlSZGB.OoLxOjctI.70Hh1zZz4TKzhgONqGyuj1NnTormViq');
 
 if (!isset($_SESSION['login_attempts'])) {
     $_SESSION['login_attempts'] = 0;
