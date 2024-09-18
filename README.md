@@ -150,7 +150,7 @@ if (strlen($key) < 32) {
 ```
 ---
 
-## ⚠️# Important Note
+## ⚠️ Important Note
 
 > oWoWare ransomware developed for educational, simulation, and attack demonstration purposes.<br>
 > **The author** is not **responsible** for any misuse of it.
