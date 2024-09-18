@@ -149,22 +149,9 @@ if (strlen($key) < 32) {
 }
 ```
 ---
-## ⚠️ Warning: Use in Controlled Environments
 
-### Tool Description
+## ⚠️# Important Note
 
-This tool is designed for educational purposes. Its main function is to encrypt and decrypt files, as well as execute commands in an integrated terminal. It provides advanced functionalities for handling files at a system level, including the ability to encrypt entire directories using the **AES-256-CBC** algorithm. It also includes an interface for command execution directly on the server.
-
-## Potential Risks
-
-### 1. **File Encryption**
-File encryption is an extremely sensitive operation. If encryption keys are lost or mismanaged, the files may become unrecoverable. Additionally, any misuse of the encryption system could compromise the integrity of the files or data security.
-
-### 2. **Command Execution**
-The integrated terminal allows for the execution of a predefined list of system commands. Although precautions have been taken to limit the allowed commands, misuse of this functionality could lead to accidental modification or deletion of server files.
-
-## Usage Recommendations
-
-### 1. **Controlled Environment**
-This tool should be used **exclusively** in controlled environments, such as development servers or testing environments. It should never be implemented on production servers or systems accessible to the public without appropriate security precautions.
-
+> oWoWare ransomware developed for educational, simulation, and attack demonstration purposes.<br>
+> **The author** is not **responsible** for any misuse of it.
+---
