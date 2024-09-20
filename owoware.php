@@ -1,3 +1,4 @@
+// Author: Omar Salazar
 <?php
 session_start();
 
